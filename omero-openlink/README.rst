@@ -81,7 +81,7 @@ system users omero-server and omero-web while nginx user must have read-only acc
 
     $omero script upload ./omero/util_scripts/Create_OpenLink.py --official # Upload the configured script
 
-1. Add a configuration for nginx (This section assumes that an you use an nginx server.)
+7. Add a configuration for nginx (This section assumes that an you use an nginx server.)
 
 For the configuration you have to reuse the specified values for `SERVER_NAME` and `OPENLINK_DIR`.
 Specify the URL under which the data should be accessible:
@@ -162,7 +162,9 @@ Example for *index.html*
       </body>
     </html>
 
-9. Test & Troubleshoot. If SELinux is active, it would prevent nginx from following symlinks and the download of these files
+9. Test & Troubleshoot.
+
+If SELinux is active, it would prevent nginx from following symlinks and the download of these files.
 
 Validation
 ==========

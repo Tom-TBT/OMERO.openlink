@@ -13,16 +13,10 @@ Requirements
 ============
 - OMERO.web 5.6.0 or newer
 - nginx server configurations
+- OMERO.web and OMERO.server are running on the same server
 
 Installation
 ============
-
-This section assumes that an OMERO.web is already installed and you will use the nginx server to provide the URL's.
-
-Prerequisites
--------------
-
-OMERO.server and OMERO.web must be running on the same server.
 
 1. Install the app in omero-web python venv:
 
@@ -58,38 +52,36 @@ system users omero-server and omero-web while nginx user must have read-only acc
 
 5. Set other openlink configurations
 
+::
+
     # path of prepared OPENLINK_DIR, here as eaxmple */storage/openlink*
     $omero config set omero.web.openlink.dir '/storage/openlink'
-    # set the url alias of your OMERO.web server without leading http://. Here as example we use the address of the openmicroscopy demo server
+
+    # set the url alias of your OMERO.web server without leading http:// but with the openlink nginx location (set in the nginx config bellow)
     $omero config set omero.web.openlink.servername 'demo.openmicroscopy.org/openlink'
+
     # http or https
     $omero config set omero.web.openlink.type_http 'https'
+
 
 6. Edit and upload the script to create Open Links from OMERO.web
 
 ::
+
     $pip show omero-openlink  # shows the installation path of omero-openlink
     $cd .../venv3/lib/python3.6/site-packages/.../omero_openlink/scripts  # cd to the scripts directory
     # edit the following in Create_OpenLink.py
 
-    # Directory for links that the nginx server also has access to
-    OPENLINK_DIR= "/path/to/open_link_dir"
 
-    # name of nginx website
-    SERVER_NAME = "omero-data.myfacility.com"
-
-    # type of hypertext transfer protocol (http or https)
-    TYPE_HTTP="https"
-
-    # email originator
-    ADMIN_EMAIL = "myemail@yourfacilitydomain"
-
-    # length of hash string used in the openlink url
-    LENGTH_HASH = 12
+    OPENLINK_DIR= "/path/to/open_link_dir"  # Directory for links that the nginx server also has access to
+    SERVER_NAME = "omero-data.myfacility.com"  # name of nginx website
+    TYPE_HTTP="https"  # type of hypertext transfer protocol (http or https)
+    ADMIN_EMAIL = "myemail@yourfacilitydomain"  # email originator
+    LENGTH_HASH = 12  # length of hash string used in the openlink url
 
     $omero script upload ./omero/util_scripts/Create_OpenLink.py --official # Upload the configured script
 
-7. Add a configuration for nginx (This section assumes that an you use an nginx server.)
+1. Add a configuration for nginx (This section assumes that an you use an nginx server.)
 
 For the configuration you have to reuse the specified values for `SERVER_NAME` and `OPENLINK_DIR`.
 Specify the URL under which the data should be accessible:
@@ -170,6 +162,7 @@ Example for *index.html*
       </body>
     </html>
 
+9. Test & Troubleshoot. If SELinux is active, it would prevent nginx from following symlinks and the download of these files
 
 Validation
 ==========
